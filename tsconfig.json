@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "skipLibCheck": true,
+
+        /* Bundler mode */
+        "noUnusedLocals": false,
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "jsx": "preserve",
+        /* Linting */
+        "strict": false,
+
+        "allowJs": true /* Allow javascript files to be compiled. */,
+
+        "baseUrl": "." /* Base directory to resolve non-absolute module names. */,
+        "paths": {
+            "/@/*": ["src/*"]
+        } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.d.ts"],
+    "exclude": ["node_modules", "dist"], // Indicates the file directory that does not need to be compiled
+    "references": [{ "path": "./tsconfig.node.json" }]
+}

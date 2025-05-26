@@ -1,6 +1,6 @@
 <template>
   <!-- 折线图 -->
-  <div style="width: 365px; height: 330px; top:-20px" ref="barChartsDOM"></div>
+  <div style="width: 800px; height: 330px; top:-20px" ref="barChartsDOM"></div>
 </template>
 
 
@@ -10,7 +10,25 @@
 import { ref, onMounted, toRef } from "vue";
 import * as echarts from "echarts";
 
+import axios from 'axios';
 const barChartsDOM = ref();
+
+const message = ref('');
+
+// onMounted(() => {
+//   axios.post('/api/data', {
+//     // 这里是你要传给后端的 JSON 数据
+//     year: 2024,
+//     region: 'south',
+//     monthly: 'October'
+//   })
+//       .then(response => {
+//         message.value = response.data.data;
+//       })
+//       .catch(error => {
+//         console.error("请求失败:", error);
+//       });
+// });
 
 async function initMap() {
   var myChart = echarts.init(barChartsDOM.value);
@@ -19,6 +37,7 @@ async function initMap() {
   // prettier-ignore
 
   let data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
+  let data2 = [120, 132, 101, 134, 90, 230, 210, 153, 342, 221, 190, 99, 150, 132, 183, 234, 298, 143, 165, 120];
   let yMax = 500;
   let dataShadow = [];
 
@@ -49,7 +68,14 @@ async function initMap() {
           icon: "circle",
           // 设置文本为红色
           textStyle: {
-            color: "whilt",
+            color: "white",
+          },
+        },
+        {
+          name: "label2",
+          icon: "circle",
+          textStyle: {
+            color: "white",
           },
         },],
       bottom: 0,
@@ -133,6 +159,28 @@ async function initMap() {
         },
         data: data,
       },
+      {
+        name: "label2",
+        type: "bar",
+        showBackground: true,
+        itemStyle: {
+          // 为 label2 设置不同的颜色
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: "rgb(237,170,89)" },
+            { offset: 1, color: "rgb(255, 204, 0)" },
+          ]),
+        },
+        emphasis: {
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: "#ffcc66" },
+              { offset: 0.7, color: "#ffcc66" },
+              { offset: 1, color: "#eccfb1" },
+            ]),
+          },
+        },
+        data: data2,
+      }
     ],
   };
 

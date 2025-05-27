@@ -1,6 +1,11 @@
 <template>
   <!-- 折线图 -->
-  <div style="width: 800px; height: 330px; top:-20px" ref="barChartsDOM"></div>
+  <div class="chart-container">
+    <!-- 折线图容器 -->
+    <div class="chart-wrapper">
+      <div ref="barChartsDOM" style="width: 100%; height: 400px;"></div>
+    </div>
+  </div>
 </template>
 
 
@@ -37,7 +42,6 @@ async function initMap() {
   // prettier-ignore
 
   let data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
-  let data2 = [120, 132, 101, 134, 90, 230, 210, 153, 342, 221, 190, 99, 150, 132, 183, 234, 298, 143, 165, 120];
   let yMax = 500;
   let dataShadow = [];
 
@@ -139,31 +143,6 @@ async function initMap() {
         type: "bar",
         showBackground: true,
         itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "rgb(0, 221, 255)" },
-            // { offset: 0.5, color: 'rgb(0, 221, 255)' },
-            { offset: 1, color: "rgb(77, 119, 255)" },
-            // { offset: 0, color: 'rgb(6,190,179)' },
-            // // { offset: 0.5, color: 'rgb(0, 221, 255)' },
-            // { offset: 1, color: 'rgb(1,141,160)' }
-          ]),
-        },
-        emphasis: {
-          itemStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: "#2378f7" },
-              { offset: 0.7, color: "#2378f7" },
-              { offset: 1, color: "#83bff6" },
-            ]),
-          },
-        },
-        data: data,
-      },
-      {
-        name: "label2",
-        type: "bar",
-        showBackground: true,
-        itemStyle: {
           // 为 label2 设置不同的颜色
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: "rgb(237,170,89)" },
@@ -179,7 +158,7 @@ async function initMap() {
             ]),
           },
         },
-        data: data2,
+        data: data,
       }
     ],
   };
@@ -191,3 +170,18 @@ onMounted(async () => {
   await initMap();
 });
 </script>
+<style lang="scss" scoped>
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: 10px; // 模块之间间距
+}
+.chart-wrapper {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0;
+}
+</style>

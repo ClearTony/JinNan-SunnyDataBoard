@@ -1,248 +1,97 @@
 <template>
-  <!-- 散点图 scatterPlotDOM-->
-  <div
-    style="width: 365px; height: 330px; top: -20px"
-    ref="scatterPlotDOM"
-  ></div>
+  <!--第二个 -->
+  <div class="flex">
+    <div class="col-md-1">
+      <div class="column">
+        <p>实时功率</p>
+        <div class="purple"><span class="bold">1292</span> kW</div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="column">
+        <p>装机功率</p>
+        <div class="grn"><span class="bold">892</span> MWp</div>
+      </div>
+    </div>
+  </div>
+  <div class="deprecated-line1">
+    <dv-decoration-4 style="width:10px;height:230px;" />
+  </div>
+  <div class="deprecated-line2">
+    <dv-decoration-4 style="width:10px;height:230px;" />
+  </div>
 </template>
+
+<style lang="scss" scoped>
+.hbule {
+  color: #86b5d2;
+}
+.purple {
+  color: #8129dd;
+}
+.grn {
+  color: #8ec63f;
+}
+.bule {
+  color: #2756ca;
+}
+.yel {
+  color: #f1b601;
+}
+.org {
+  color: #f86423;
+}
+.ybule {
+  color: #27aae3;
+}
+
+.column {
+  border: 1px solid #252e44;
+  text-align: center;
+  margin-bottom: 0;
+  margin: 1px;
+}
+
+// 文字
+.column p {
+  background: #6d8fe600;
+  color: #fff;
+  padding: 0;
+  font-size: 20px;
+}
+// 数字
+.column div {
+  font-size: 25px;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.col-md-1 {
+  margin-top: 30px;
+  margin-left: 95px;
+  width: 180px;
+   //float: left;
+}
+
+.col-md-2 {
+  margin-top: 50px;
+  margin-left: 95px;
+  width: 180px;
+  // float: left;
+}
+
+.deprecated-line1 {
+  margin-top: -250px;
+  margin-left: 30px;
+}
+.deprecated-line2 {
+  margin-top: -235px;
+  margin-left: 330px;
+}
+</style>
+
 
 
 <script setup lang="ts">
-import { ref, onMounted, toRef } from "vue";
-import * as echarts from "echarts";
 
-const scatterPlotDOM = ref();
-
-async function initMap() {
-  var myChart = echarts.init(scatterPlotDOM.value);
-
-  var plantCap = [
-    {
-      name: "发明",
-      value: "78",
-    },
-    {
-      name: "外观",
-      value: "35",
-    },
-    {
-      name: "商标",
-      value: "31",
-    },
-    {
-      name: "实用",
-      value: "41",
-    },
-    {
-      name: "超市",
-      value: "30",
-    },
-    {
-      name: "软件",
-      value: "27",
-    },
-  ];
-  var datalist = [
-    {
-      offset: [56, 48],
-      symbolSize: 120,
-      // opacity: .95,
-      color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
-            colorStops: [{
-                    offset: 0,
-                    color: '#37CCE2' // 渐变起始颜色
-                },
-                {
-                    offset: 1,
-                    color: '#14AAE5' // 渐变结束颜色
-                }
-            ],
-            global: false // 缺省为 false
-        },
-      opacity : 0.95
-    },
-    {
-      offset: [20, 80],
-      symbolSize: 80,
-      color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
-            colorStops: [{
-                    offset: 0,
-                    color: '#F8C315' // 渐变起始颜色
-                },
-                {
-                    offset: 1,
-                    color: '#FB7C17' // 渐变结束颜色
-                }
-            ],
-            global: false // 缺省为 false
-        }
-    },
-    {
-      offset: [10, 43],
-      symbolSize: 60,
-      color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
-            colorStops: [{
-                    offset: 0,
-                    color: '#45DA86' // 渐变起始颜色
-                },
-                {
-                    offset: 1,
-                    color: '#16B8C1' // 渐变结束颜色
-                }
-            ],
-            global: false // 缺省为 false
-        }
-    },
-    {
-      offset: [93, 25],
-      symbolSize: 80,
-      color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
-            colorStops: [{
-                    offset: 0,
-                    color: '#3DB9F9' // 渐变起始颜色
-                },
-                {
-                    offset: 1,
-                    color: '#616DF2' // 渐变结束颜色
-                }
-            ],
-            global: false // 缺省为 false
-        }
-    },
-    {
-      offset: [33, 16],
-      symbolSize: 65,
-      color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
-            colorStops: [{
-                    offset: 0,
-                    color: '#F68740' // 渐变起始颜色
-                },
-                {
-                    offset: 1,
-                    color: '#DC2F70' // 渐变结束颜色
-                }
-            ],
-            global: false // 缺省为 false
-        }
-    },
-    {
-      offset: [85, 80],
-      symbolSize: 55,
-      color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
-            colorStops: [{
-                    offset: 0,
-                    color: '#E171E7' // 渐变起始颜色
-                },
-                {
-                    offset: 1,
-                    color: '#742FC8' // 渐变结束颜色
-                }
-            ],
-            global: false // 缺省为 false
-        }
-    },
-  ];
-
-  var datas = [];
-  for (var i = 0; i < plantCap.length; i++) {
-    var item = plantCap[i];
-    var itemToStyle = datalist[i];
-    datas.push({
-      name: item.value + "\n" + item.name,
-      value: itemToStyle.offset,
-      symbolSize: itemToStyle.symbolSize,
-
-      itemStyle: {
-        normal: {
-          color: itemToStyle.color,
-          opacity: itemToStyle.opacity,
-        },
-      },
-    });
-  }
-  var option = {
-    grid: {
-      show: false,
-      top: 10,
-      bottom: 10,
-    },
-
-    xAxis: [
-      {
-        gridIndex: 0,
-        type: "value",
-        show: false,
-        min: 0,
-        max: 100,
-        nameLocation: "middle",
-        nameGap: 5,
-      },
-    ],
-
-    yAxis: [
-      {
-        gridIndex: 0,
-        min: 0,
-        show: false,
-        max: 100,
-        nameLocation: "middle",
-        nameGap: 30,
-      },
-    ],
-    series: [
-      {
-        type: "scatter",
-        symbol: "circle",
-        symbolSize: 400,
-        label: {
-          normal: {
-            show: true,
-            formatter: "{b}",
-            color: "#FFF",
-            textStyle: {
-              fontSize: "18",
-            },
-          },
-        },
-        data: datas,
-      },
-    ],
-  };
-
-  myChart.setOption(option);
-}
-
-onMounted(async () => {
-  await initMap();
-});
 </script>

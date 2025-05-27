@@ -1,8 +1,8 @@
-<template>
+<template                                                                                                                                 >
   <!-- 第一个 停电检测 -->
   <div>
     <!-- 二级标题 -->
-    <dv-border-box-11 title="⚡️ 停电检测" style="width: 900px; height: 930px">
+    <dv-border-box-11 title="⚡️ 停电检测" style="width: 1900px; height: 1200px">
       <div>
         <!-- 三级标题 -->
         <div>
@@ -29,8 +29,8 @@
             style="
               top: 90px;
               left: 40px;
-              width: 820px;
-              height: 340px;
+              width: 1810px;
+              height: 500px;
               color: #fff;
             "
           >
@@ -96,8 +96,8 @@
                 style="
                   top: 130px;
                   left: 40px;
-                  width: 800px;
-                  height: 340px;
+                  width: 1810px;
+                  height: 450px;
                   color: #fff;
                 "
               >

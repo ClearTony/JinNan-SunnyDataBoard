@@ -28,9 +28,9 @@ async function initMap() {
   var option = {
     title: [
       {
-        text: "湄潭",
+        text: "能量分析",
         top: "58%",
-        left: "17%",
+        left: "14%",
         padding: [-30, 0],
         textStyle: {
           color: "#fff",
@@ -39,9 +39,9 @@ async function initMap() {
         },
       },
       {
-        text: "凤冈",
+        text: "净收益",
         top: "58%",
-        left: "77%",
+        left: "76%",
         padding: [-30, 0],
         textStyle: {
           color: "#fff",
@@ -50,7 +50,7 @@ async function initMap() {
         },
       },
       {
-        text: "余庆",
+        text: "生产",
         left: "center",
         top: "57%",
         padding: [-30, 0],

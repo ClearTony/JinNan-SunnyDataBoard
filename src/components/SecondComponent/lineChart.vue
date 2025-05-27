@@ -1,6 +1,11 @@
 <template>
-  <!-- 折线图 -->
-  <div style="width: 800px; height: 300px" ref="chartsDOM"></div>
+  <!-- 外层容器，用于统一管理布局 -->
+  <div class="chart-container">
+    <!-- 折线图容器 -->
+    <div class="chart-wrapper">
+      <div ref="chartsDOM" style="width: 100%; height: 450px;"></div>
+    </div>
+  </div>
 </template>
 
 
@@ -9,8 +14,30 @@
 <script setup lang="ts">
 import { ref, onMounted, toRef } from "vue";
 import * as echarts from "echarts";
+// src/utils/request.ts
+import axios from 'axios'
 
 const chartsDOM = ref();
+const categories = ref<string[]>([])
+const line1Data = ref<number[]>([])
+const line2Data = ref<number[]>([])
+
+// onMounted(() => {
+//   axios.post('/api/data', {
+//     // 这里是你要传给后端的 JSON 数据
+//     year: 2024,
+//     region: 'south',
+//     monthly: 'October'
+//   })
+//       .then(response => {
+//         categories.value = response.categories
+//         line1Data.value = response.line1Data
+//         line2Data.value = response.line2Data
+//       })
+//       .catch(error => {
+//         console.error("请求失败:", error);
+//       });
+// });
 
 async function initMap() {
   var myChart = echarts.init(chartsDOM.value);
@@ -19,13 +46,19 @@ async function initMap() {
   // 再得到数据的基础上，进行地图绘制
   myChart.hideLoading();
   var option = {
-    color: ["#00DDFF", "#80FFA5"],
+    color: ["#80FFA5","#00DDFF"],
     title: {
       // text: "  🚀 车流量折线图 ",
-      // left: 'center'
+      // left: 'center',
       // subtext: '每分钟数据'
     },
-
+    dataZoom: [
+      {
+        type: 'inside',
+        start: 0,
+        end: 100
+      }
+    ],
     tooltip: {
       trigger: "axis",
       axisPointer: {
@@ -34,7 +67,15 @@ async function initMap() {
           backgroundColor: "#0C93B4",
         },
       },
-      formatter: "{b}:<br/> 车流量：{c} %",
+      formatter: function(params) {
+        let result = `${params[0].name}<br/>`; // x轴名称，例如 Mon
+
+        params.forEach(item => {
+          result += `${item.marker} ${item.seriesName}: ${item.value} %<br/>`;
+        });
+
+        return result;
+      }
     },
     legend: {
       data: [
@@ -44,7 +85,7 @@ async function initMap() {
           icon: "circle",
           // 设置文本为红色
           textStyle: {
-            color: "whilt",
+            color: "white",
           },
         },
         {
@@ -53,7 +94,7 @@ async function initMap() {
           icon: "circle",
           // 设置文本为红色
           textStyle: {
-            color: "whilt",
+            color: "white",
           },
         },
       ],
@@ -97,6 +138,7 @@ async function initMap() {
         type: "category",
         data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       },
+
     ],
     yAxis: [
       {
@@ -107,24 +149,12 @@ async function initMap() {
       {
         name: "Line 1",
         type: "line",
-        stack: "Total",
+        smooth: true,
         lineStyle: {
-          width: 0,
+          width: 2, // 同样设为 2
+          color: "#80FFA5", // 橙色
         },
         showSymbol: false,
-        areaStyle: {
-          opacity: 0.8,
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: "rgb(128, 255, 165)",
-            },
-            {
-              offset: 1,
-              color: "rgb(1, 191, 236)",
-            },
-          ]),
-        },
         emphasis: {
           focus: "series",
         },
@@ -133,67 +163,54 @@ async function initMap() {
       {
         name: "Line 2",
         type: "line",
-        stack: "Total",
         smooth: true,
         lineStyle: {
-          width: 0,
+          width: 2,
+          color: "#00DDFF", // 蓝色,
         },
         showSymbol: false,
-        areaStyle: {
-          opacity: 0.8,
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: "rgb(0, 221, 255)",
-            },
-            {
-              offset: 1,
-              color: "rgb(77, 119, 255)",
-            },
-          ]),
-        },
         emphasis: {
           focus: "series",
         },
-        data: [120, 282, 111, 234, 220, 340, 310],
+        data: [120, 282, 111, 234, 220, 100, 310],
       },
-      {
-        polyline: true,
-        // showSymbol: false,
-        name: "流动光线",
-        type: "lines",
-        smooth: true,
-        coordinateSystem: "cartesian2d",
-        effect: {
-          delay: 100, // 延迟100ms开始流动
-          trailLength: 0.5,
-          show: true,
-          period: 5,
-          symbolSize: 4,
-          loop: true,
-        },
-        lineStyle: {
-          color: "#20db9df0",
-          width: 0,
-          opacity: 0,
-          curveness: 0.5, // 设置曲率
-          // type: "curve", // 设置为曲线
-        },
-
-        data: [
-          {
-            coords: [
-              [0, 140],
-              [1, 232],
-              [2, 101],
-              [3, 264],
-              [4, 90],
-              [5, 340],
-              [6, 250],
-            ],
-          },
-        ],
-      },
+      // {
+      //   polyline: true,
+      //   // showSymbol: false,
+      //   name: "流动光线",
+      //   type: "lines",
+      //   smooth: true,
+      //   coordinateSystem: "cartesian2d",
+      //   effect: {
+      //     delay: 100, // 延迟100ms开始流动
+      //     trailLength: 0.5,
+      //     show: true,
+      //     period: 5,
+      //     symbolSize: 4,
+      //     loop: true,
+      //   },
+      //   lineStyle: {
+      //     color: "#20db9df0",
+      //     width: 0,
+      //     opacity: 0,
+      //     curveness: 0.5, // 设置曲率
+      //     // type: "curve", // 设置为曲线
+      //   },
+      //
+      //   data: [
+      //     {
+      //       coords: [
+      //         [0, 140],
+      //         [1, 232],
+      //         [2, 101],
+      //         [3, 264],
+      //         [4, 90],
+      //         [5, 340],
+      //         [6, 250],
+      //       ],
+      //     },
+      //   ],
+      // },
     ],
   };
 
@@ -204,3 +221,18 @@ onMounted(async () => {
   await initMap();
 });
 </script>
+<style lang="scss" scoped>
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: 10px; // 模块之间间距
+}
+.chart-wrapper {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0;
+}
+</style>

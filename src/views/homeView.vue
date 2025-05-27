@@ -4,11 +4,11 @@
     <TopHeader></TopHeader>
 
     <div class="flex" style="margin-top: 40px; margin-left: 20px">
-      <!-- 第一个 -->
-      <div class="mr-20" style="margin-left: 60px">
-        <First></First>
-      </div>
 
+      <!-- 第五个 -->
+      <div class="mr-20" style="margin-left: 40px">
+        <Fifth></Fifth>
+      </div>
       <!-- 第二个 -->
       <div class="mr-20" style="margin-left: 40px">
         <Second></Second>
@@ -19,16 +19,17 @@
         <Third></Third>
       </div>
 
+      <!-- 第一个 -->
+      <div class="mr-20" style="margin-left: 60px">
+        <First></First>
+      </div>
 
       <!-- 第四个 -->
       <div class="mr-20" style="margin-left: 40px">
         <Forth></Forth>
       </div>
 
-      <!-- 第五个 -->
-      <div class="mr-20" style="margin-left: 40px">
-        <Fifth></Fifth>
-      </div>
+
 
       <!-- 第六个 -->
       <div class="mr-20" style="margin-left: 40px">
@@ -44,7 +45,7 @@
 <script lang="ts" setup>
 
 // 第一個
-import First from "/@/components/FirstComponent/index.vue";
+  import First from "/@/components/FirstComponent/index.vue";
 import Second from "/@/components/SecondComponent/index.vue";
 import Third from "/@/components/ThirdComponent/index.vue";
 

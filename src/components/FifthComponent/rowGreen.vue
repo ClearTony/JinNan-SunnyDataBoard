@@ -3,24 +3,24 @@
   <div class="decoration-1">
     <dv-decoration-3 style="width:600px;height:30px;" />
   </div>
-  <div class="flex">
+  <div class="flex" v-if="powerStationDetail">
     <div class="col-md-2">
       <div class="column">
         <p>CO₂减排量</p>
-        <div class="purple"><span class="bold">1292</span>千吨</div>
+        <div class="purple"><span class="bold">{{powerStationDetail.coTwoValue}}</span>{{powerStationDetail.coTwoUnit}}</div>
       </div>
     </div>
     <div class="col-md-2">
       <div class="column">
         <p>节约标准煤</p>
-        <div class="grn"><span class="bold">892</span>吨</div>
+        <div class="grn"><span class="bold">{{powerStationDetail.standardCoalValue}}</span>{{powerStationDetail.standardCoalUnit}}</div>
       </div>
     </div>
 
     <div class="col-md-2">
       <div class="column">
         <p>等效植树</p>
-        <div class="yel"><span class="bold">12.44</span>万棵</div>
+        <div class="yel"><span class="bold">{{powerStationDetail.standingWoodValue}}</span>{{powerStationDetail.standingWoodUnit}}</div>
       </div>
     </div>
   </div>
@@ -108,5 +108,15 @@
 
 
 <script setup lang="ts">
+import {usePowerStationStore} from "/@/stores/powerStationStore";
+import {computed, onMounted, onUnmounted} from "vue";
 
+const powerStationStore = usePowerStationStore();
+const powerStationDetail = computed(() => powerStationStore.powerStationDetail);
+onMounted(async () => {
+  await powerStationStore.startFetching();
+});
+onUnmounted(() => {
+  powerStationStore.stopFetching();
+});
 </script>

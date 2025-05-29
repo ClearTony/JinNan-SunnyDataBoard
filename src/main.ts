@@ -6,6 +6,9 @@ import DataVVue3 from '@kjgl77/datav-vue3'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
-const app = createApp(App)
+import { createPinia } from 'pinia';
 
+const pinia = createPinia();
+const app = createApp(App)
+app.use(pinia);
 app.use(router).use(ElementPlus, { locale }).use(DataVVue3).mount('#app')

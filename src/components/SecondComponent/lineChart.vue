@@ -12,35 +12,34 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, toRef } from "vue";
+import { ref, onMounted, watch,onUnmounted } from "vue";
 import * as echarts from "echarts";
-// src/utils/request.ts
 import axios from 'axios'
 
 const chartsDOM = ref();
-const categories = ref<string[]>([])
-const line1Data = ref<number[]>([])
-const line2Data = ref<number[]>([])
-
-// onMounted(() => {
-//   axios.post('/api/data', {
-//     // 这里是你要传给后端的 JSON 数据
-//     year: 2024,
-//     region: 'south',
-//     monthly: 'October'
-//   })
-//       .then(response => {
-//         categories.value = response.categories
-//         line1Data.value = response.line1Data
-//         line2Data.value = response.line2Data
-//       })
-//       .catch(error => {
-//         console.error("请求失败:", error);
-//       });
-// });
-
+const yaxisYesterDayDatas = ref<number[]>([])
+const xaxisYesterDayDatas = ref<string[]>([])
+const yaxisNowDatas = ref<number[]>([])
+// 监听数据变化自动更新图表
+watch([xaxisYesterDayDatas, yaxisYesterDayDatas, yaxisNowDatas], () => {
+  initMap();
+}, { deep: true });
+async function fetchData() {
+  try {
+    const res = await axios.post('/data/getDayLineChart', {
+      queryDate: "20250529"
+    });
+    xaxisYesterDayDatas.value = res.data.data.xaxisYesterDayDatas;
+    yaxisYesterDayDatas.value = res.data.data.yaxisYesterDayDatas;
+    yaxisNowDatas.value =  res.data.data.yaxisNowDatas;
+  } catch (error) {
+    console.error("请求失败:", error);
+  }
+}
 async function initMap() {
-  var myChart = echarts.init(chartsDOM.value);
+  const myChart = echarts.getInstanceByDom(chartsDOM.value) ||
+      echarts.init(chartsDOM.value);
+  myChart.clear(); // 清除旧的图表配置
   // 显示 loading 动画
   myChart.showLoading();
   // 再得到数据的基础上，进行地图绘制
@@ -69,9 +68,15 @@ async function initMap() {
       },
       formatter: function(params) {
         let result = `${params[0].name}<br/>`; // x轴名称，例如 Mon
+        const formatNumber = (num: number) => {
+          return num.toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          });
+        };
 
         params.forEach(item => {
-          result += `${item.marker} ${item.seriesName}: ${item.value} %<br/>`;
+          result += `${item.marker} ${item.seriesName}: ${formatNumber(Number(item.value))} W<br/>`;
         });
 
         return result;
@@ -80,7 +85,7 @@ async function initMap() {
     legend: {
       data: [
         {
-          name: "Line 1",
+          name: "PV",
           // 强制设置图形为圆。
           icon: "circle",
           // 设置文本为红色
@@ -89,7 +94,7 @@ async function initMap() {
           },
         },
         {
-          name: "Line 2",
+          name: "昨日数据",
           // 强制设置图形为圆。
           icon: "circle",
           // 设置文本为红色
@@ -100,29 +105,25 @@ async function initMap() {
       ],
       bottom: -5,
     },
-    // 保存
-    // toolbox: {
-    //   feature: {
-    //     saveAsImage: {
-    //       pixelRatio: 2, // 设置保存图像的像素比例，默认为1，可以提高清晰度
-    //       title: "下载", // 保存图像按钮的鼠标悬停标题
-    //       // icon: 'image://path/to/save-icon.png', // 自定义保存图像按钮的图标
-    //       name: "车流量折线图", // 指定保存图像时使用的文件名
-    //       // backgroundColor: 'transparent', // 保存的图像背景颜色，默认为透明
-    //       excludeComponents: ["toolbox"], // 排除不想保存的组件，默认不排除任何组件
-    //       show: true, // 是否显示保存图像按钮，默认为true
-    //       // emphasis: {
-    //       //     show: true, // 鼠标悬停按钮时是否高亮显示，默认为true
-    //       //     iconStyle: {
-    //       //         textPosition: 'bottom',
-    //       //         color: '#000',
-    //       //         borderColor: '#000',
-    //       //         borderWidth: 1
-    //       //     }
-    //       // }
-    //     },
-    //   },
-    // },
+    toolbox: {
+      feature: {
+        saveAsImage: {
+          pixelRatio: 2, // 设置保存图像的像素比例，默认为1，可以提高清晰度
+          title: "下载", // 保存图像按钮的鼠标悬停标题
+          // icon: 'image://path/to/save-icon.png', // 自定义保存图像按钮的图标
+          name: "日发电量折线图", // 指定保存图像时使用的文件名
+          backgroundColor: '#0a1b34',
+          excludeComponents: ["toolbox","dataZoom"], // 排除不想保存的组件，默认不排除任何组件
+          borderColor: '#3570d2',
+          borderWidth: 1,
+          // 提高图片质量
+          quality: 0.8,
+          // 类型默认是png，也可以设置为jpeg
+          type: 'png',
+          show: true, // 是否显示保存图像按钮，默认为true
+        },
+      },
+    },
 
     grid: {
       left: "5%",
@@ -136,18 +137,30 @@ async function initMap() {
       {
         boundaryGap: false,
         type: "category",
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        data: xaxisYesterDayDatas.value,
+        axisLabel: {
+          color: "rgba(255,255,255,0.8)",
+        },
       },
+
 
     ],
     yAxis: [
       {
         type: "value",
+        name: "生产(W)",
+        nameTextStyle: {
+          color: "rgba(255,255,255,0.8)", // 橙色示例，可改为任意颜色
+          fontSize: 12,    // 可选：调整字体大小
+        },
+        axisLabel: {
+          color: "rgba(255,255,255,0.8)",
+        },
       },
     ],
     series: [
       {
-        name: "Line 1",
+        name: "PV",
         type: "line",
         smooth: true,
         lineStyle: {
@@ -158,10 +171,10 @@ async function initMap() {
         emphasis: {
           focus: "series",
         },
-        data: [140, 232, 101, 264, 90, 340, 250],
+        data: yaxisNowDatas.value,
       },
       {
-        name: "Line 2",
+        name: "昨日数据",
         type: "line",
         smooth: true,
         lineStyle: {
@@ -172,53 +185,25 @@ async function initMap() {
         emphasis: {
           focus: "series",
         },
-        data: [120, 282, 111, 234, 220, 100, 310],
+        data: yaxisYesterDayDatas.value,
       },
-      // {
-      //   polyline: true,
-      //   // showSymbol: false,
-      //   name: "流动光线",
-      //   type: "lines",
-      //   smooth: true,
-      //   coordinateSystem: "cartesian2d",
-      //   effect: {
-      //     delay: 100, // 延迟100ms开始流动
-      //     trailLength: 0.5,
-      //     show: true,
-      //     period: 5,
-      //     symbolSize: 4,
-      //     loop: true,
-      //   },
-      //   lineStyle: {
-      //     color: "#20db9df0",
-      //     width: 0,
-      //     opacity: 0,
-      //     curveness: 0.5, // 设置曲率
-      //     // type: "curve", // 设置为曲线
-      //   },
-      //
-      //   data: [
-      //     {
-      //       coords: [
-      //         [0, 140],
-      //         [1, 232],
-      //         [2, 101],
-      //         [3, 264],
-      //         [4, 90],
-      //         [5, 340],
-      //         [6, 250],
-      //       ],
-      //     },
-      //   ],
-      // },
     ],
   };
 
   myChart.setOption(option);
 }
 
+let intervalId: ReturnType<typeof setInterval>;
 onMounted(async () => {
-  await initMap();
+  await fetchData();
+  // 每 5 分钟（300000 毫秒）调用一次 fetchData 方法
+  intervalId = setInterval(fetchData, 500000);
+});
+onUnmounted(() => {
+  // 组件卸载时清除定时器，避免内存泄漏
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
 });
 </script>
 <style lang="scss" scoped>

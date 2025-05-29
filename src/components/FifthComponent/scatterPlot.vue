@@ -1,16 +1,16 @@
 <template>
   <!--第二个 -->
-  <div class="flex">
+  <div class="flex" v-if="powerStationDetail">
     <div class="col-md-1">
       <div class="column">
         <p>实时功率</p>
-        <div class="purple"><span class="bold">1292</span> kW</div>
+        <div class="purple"><span class="bold">{{ powerStationDetail.currPowerValue }}</span> {{powerStationDetail.currPowerUnit }}</div>
       </div>
     </div>
     <div class="col-md-2">
       <div class="column">
         <p>装机功率</p>
-        <div class="grn"><span class="bold">892</span> MWp</div>
+        <div class="grn"><span class="bold">{{ powerStationDetail.totalCapcityValue }}</span> {{ powerStationDetail.totalCapcityUnit }}</div>
       </div>
     </div>
   </div>
@@ -52,14 +52,13 @@
   margin: 1px;
 }
 
-// 文字
 .column p {
   background: #6d8fe600;
   color: #fff;
   padding: 0;
   font-size: 20px;
 }
-// 数字
+
 .column div {
   font-size: 25px;
   padding: 0;
@@ -70,14 +69,12 @@
   margin-top: 30px;
   margin-left: 95px;
   width: 180px;
-   //float: left;
 }
 
 .col-md-2 {
   margin-top: 50px;
   margin-left: 95px;
   width: 180px;
-  // float: left;
 }
 
 .deprecated-line1 {
@@ -85,7 +82,7 @@
   margin-left: 30px;
 }
 .deprecated-line2 {
-  margin-top: -235px;
+  margin-top: -230px;
   margin-left: 330px;
 }
 </style>
@@ -93,5 +90,15 @@
 
 
 <script setup lang="ts">
+import {usePowerStationStore} from "/@/stores/powerStationStore";
+import {onMounted, computed,onUnmounted, ref} from "vue";
 
+const powerStationStore = usePowerStationStore();
+const powerStationDetail = computed(() => powerStationStore.powerStationDetail);
+onMounted(async () => {
+  await powerStationStore.startFetching();
+});
+onUnmounted(() => {
+  powerStationStore.stopFetching();
+});
 </script>

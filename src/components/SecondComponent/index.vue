@@ -19,7 +19,7 @@
                 color: #33ffff;
               "
             >
-              ⚠️ 主网故障停电
+              ❃日发电量❃
             </div>
           </dv-border-box-5>
         </div>
@@ -65,26 +65,26 @@
                     color: #33ffff;
                   "
                 >
-                  ⚒️ 配电多维分析
+                  ❃周月年发电量❃
                   <!-- 添加按钮 -->
-                  <div style="display: flex; gap: 10px; margin-left: 550px; margin-top: -30px;">
+                  <div class="time-buttons" style="display: flex; gap: 10px; margin-left: 550px; margin-top: -30px;">
                     <button
-                        @click="handleButtonClick('年')"
-                        :style="{ color: getButtonColor('年'), backgroundColor: 'transparent', border: 'none', padding: '5px 10px', fontSize: '18px', cursor: 'pointer'}"
+                        :class="{ active: activeButton === 'week' }"
+                        @click="handleButtonClick('week')"
                     >
-                      年
+                      周
                     </button>
                     <button
-                        @click="handleButtonClick('月')"
-                        :style="{ color: getButtonColor('月'), backgroundColor: 'transparent', border: 'none', padding: '5px 10px', fontSize: '18px', cursor: 'pointer'}"
+                        :class="{ active: activeButton === 'month' }"
+                        @click="handleButtonClick('month')"
                     >
                       月
                     </button>
                     <button
-                        @click="handleButtonClick('日')"
-                        :style="{ color: getButtonColor('日'), backgroundColor: 'transparent', border: 'none', padding: '5px 10px', fontSize: '18px', cursor: 'pointer' }"
+                        :class="{ active: activeButton === 'year' }"
+                        @click="handleButtonClick('year')"
                     >
-                      日
+                      年
                     </button>
                   </div>
                 </div>
@@ -114,50 +114,6 @@
               </dv-border-box-8>
             </div>
           </div>
-
-          <!-- 隐藏饼状图部分 -->
-          <!-- <div style="margin-left: 40px">
-            <div>
-              <dv-border-box-5
-                :color="['#225762', '#225762']"
-                style="top: 120px; left: 40px; width: 280px; height: 40px"
-              >
-                <div
-                  style="
-                    padding-left: 15px;
-                    padding-top: 8px;
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #33ffff;
-                  "
-                >
-                  💡 重点关注停电
-                </div>
-              </dv-border-box-5>
-            </div>
-            <div>
-              <dv-border-box-8
-                style="
-                  top: 130px;
-                  left: 40px;
-                  width: 385px;
-                  height: 340px;
-                  color: #fff;
-                "
-              >
-                <div
-                  style="
-                    padding: 10px;
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #fff;
-                  "
-                >
-                  <pieChart></pieChart>
-                </div>
-              </dv-border-box-8>
-            </div>
-          </div> -->
         </div>
       </div>
     </dv-border-box-11>
@@ -179,33 +135,62 @@ button:hover {
   transform: scale(1.05);
   transition: all 0.2s ease;
 }
+.time-buttons {
+  margin-bottom: 20px;
+  button {
+    margin-right: 50px;
+    padding: 8px 16px; // 调整内边距，让按钮更饱满
+    border: none;  // 明确设置为无边框
+    border-radius: 4px; // 添加圆角
+    cursor: pointer;
+    background-color: transparent; // 初始背景透明
+    color: #b8babb; // 文字颜色与标题一致
+    font-size: 16px; // 调整字体大小
+    transition: all 0.3s ease; // 添加过渡效果
+
+    &.active {
+      background-color: #063c75;
+      color: white;
+      border-color: #063c75; // 激活状态边框颜色与背景一致
+    }
+
+    &:hover {
+      background-color: rgb(6, 60, 117); // 悬停时半透明背景
+      color: white;
+    }
+  }
+}
 </style>
 
 <script setup lang="ts">
 import lineChart from "/@/components/SecondComponent/lineChart.vue";
 import barChart from "/@/components/SecondComponent/barChart.vue";
-import pieChart from "/@/components/SecondComponent/pieChart.vue";
-import { ref } from 'vue';
-// 存储每个按钮的点击状态
-const buttonStates = ref<Record<string, 'white' | '#33ffff'>>({
-  年: '#33ffff',
-  月: '#33ffff',
-  日: '#33ffff'
+import {onMounted, onUnmounted, ref,provide} from 'vue';
+
+const activeButton = ref("week");
+provide('activeButton', activeButton);
+// 处理按钮点击事件
+const handleButtonClick = (buttonType: string) => {
+  activeButton.value = buttonType;
+  // 这里可以添加你需要的业务逻辑，比如调用接口获取不同时间范围的数据
+  console.log(`vue2点击了 ${buttonType} 按钮`);
+};
+let timer: ReturnType<typeof setInterval> | null = null;
+onMounted(async () => {
+  handleButtonClick('week'); // 默认触发"日"按钮
+  const buttonTypes = ['week', 'month', 'year'];
+  let index = 0;
+  timer = setInterval(() => {
+    if (index >= buttonTypes.length) {
+      index = 0;
+    }
+    handleButtonClick(buttonTypes[index]);
+    index++;
+  }, 5000);
 });
-// 处理新添加按钮的点击事件
-const handleButtonClick = (label: string) => {
-  console.log(`点击了 ${label} 按钮`);
-  if (buttonStates.value[label] === '#33ffff') {
-    buttonStates.value[label] = 'white';
-  } else if (buttonStates.value[label] === 'white') {
-    buttonStates.value[label] = '#33ffff';
-  } else {
-    buttonStates.value[label] = '#33ffff';
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer);
   }
-  // 可以在这里添加与后端交互或更新图表数据的逻辑
-};
-// 根据按钮状态获取颜色
-const getButtonColor = (label: string) => {
-  return buttonStates.value[label];
-};
+});
 </script>

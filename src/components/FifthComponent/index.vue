@@ -21,7 +21,7 @@
                     color: #33ffff;
                   "
                 >
-                  ⚠️ 主网故障停电
+                  ❃电量概况❃
                 </div>
               </dv-border-box-5>
             </div>

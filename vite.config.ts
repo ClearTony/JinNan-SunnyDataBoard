@@ -42,8 +42,8 @@ const viteConfig = defineConfig(({ mode, command }: ConfigEnv) => {
             port: env.VITE_PORT,
             open: env.VITE_OPEN,
             proxy: {
-                '/api': {
-                    target: 'http://localhost:5000',
+                '/data': {
+                    target: 'http://localhost:8090',
                     changeOrigin: true
                     // rewrite: (path) => path.replace(/^\/api/, '')
                 }

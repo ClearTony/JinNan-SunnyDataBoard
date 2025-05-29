@@ -7,45 +7,39 @@
           :class="{ active: activeButton === 'day' }"
           @click="handleButtonClick('day')"
       >
-        日
-      </button>
-      <button
-          :class="{ active: activeButton === 'week' }"
-          @click="handleButtonClick('week')"
-      >
-        周
+        今日
       </button>
       <button
           :class="{ active: activeButton === 'month' }"
           @click="handleButtonClick('month')"
       >
-        月
+        本月
       </button>
       <button
           :class="{ active: activeButton === 'year' }"
           @click="handleButtonClick('year')"
       >
-        年
+        全部
       </button>
     </div>
     <ul>
       <li>
-        <b class="animation-1"></b><b class="animation-2"></b
-        ><b class="animation-3"></b>
+        <b class="animation-1"></b><b class="animation-2"></b>
+        <b class="animation-3"></b>
         <p>能量分析</p>
-        <strong>5,741.4度</strong>
+        <strong>{{displayEnergyValue}}</strong><span>{{displayEnergyUnit}}</span>
       </li>
       <li>
         <b class="animation-1"></b><b class="animation-2"></b
         ><b class="animation-3"></b>
         <p>生产</p>
-        <strong>174.6069</strong>
+        <strong>{{displayEnergyValue}}</strong><span>{{displayEnergyUnit}}</span>
       </li>
       <li>
         <b class="animation-1"></b><b class="animation-2"></b
         ><b class="animation-3"></b>
         <p>净收益</p>
-        <strong>174.6069</strong>
+        <strong>{{displayIncomeValue}}</strong><span>{{displayIncomeUnit}}</span>
       </li>
     </ul>
 
@@ -88,7 +82,7 @@
 
 // 数字
 .big-index-1 li strong {
-  display: block;
+  display: inline-block;
   color: #fff;
   font-family: "electronicFont";
   font-size: 32px;
@@ -203,20 +197,67 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted,watch } from "vue";
+import { usePowerStationStore } from '/@/stores/powerStationStore';
+import { computed } from 'vue';
+
+const powerStationStore = usePowerStationStore();
+const powerStationDetail = computed(() => powerStationStore.powerStationDetail);
 // 记录当前激活的按钮
 const activeButton = ref("");
-
+// 新增响应式变量，用于动态显示能量值
+const displayEnergyValue = ref('');
+const displayEnergyUnit = ref('');
+const displayIncomeValue = ref('');
+const displayIncomeUnit = ref('');
 // 处理按钮点击事件
 const handleButtonClick = (buttonType: string) => {
+  // 确保有数据再处理
+  if (!powerStationDetail.value) return;
   activeButton.value = buttonType;
-  // 这里可以添加你需要的业务逻辑，比如调用接口获取不同时间范围的数据
-  console.log(`点击了 ${buttonType} 按钮`);
+  switch (buttonType) {
+    case 'day':
+      // 假设今日的能量值存储在 powerStationDetail 的某个字段中，这里示例为 totalEnergyValueDay
+      displayEnergyValue.value = powerStationDetail.value?.todayEnergyValue || '';
+      displayEnergyUnit.value = powerStationDetail.value?.todayEnergyUnit || '';
+      displayIncomeValue.value = powerStationDetail.value?.todayIncomeValue || '';
+      displayIncomeUnit.value = powerStationDetail.value?.todayIncomeUnit || '';
+      break;
+    case 'month':
+      // 假设本月的能量值存储在 powerStationDetail 的某个字段中，这里示例为 totalEnergyValueMonth
+      displayEnergyValue.value = powerStationDetail.value?.monthEnergyValue || '';
+      displayEnergyUnit.value = powerStationDetail.value?.monthEnergyUnit || '';
+      displayIncomeValue.value = powerStationDetail.value?.monthIncomeValue || '';
+      displayIncomeUnit.value = powerStationDetail.value?.monthIncomeUnit || '';
+      break;
+    case 'year':
+      // 使用原有的总能量值
+      displayEnergyValue.value = powerStationDetail.value?.totalEnergyValue || '';
+      displayEnergyUnit.value = powerStationDetail.value?.totalEnergyUnit || '';
+      displayIncomeValue.value = powerStationDetail.value?.totalIncomeValue || '';
+      displayIncomeUnit.value = powerStationDetail.value?.totalIncomeUnit || '';
+      break;
+    default:
+      displayEnergyValue.value = '';
+  }
 };
 let timer: ReturnType<typeof setInterval> | null = null;
+// 添加 watch 监听
+watch(
+    () => powerStationDetail.value,
+    (newValue) => {
+      if (newValue && !activeButton.value) {
+        handleButtonClick('day');
+      }
+    }
+);
 onMounted(async () => {
-  handleButtonClick('day'); // 默认触发"日"按钮
-  const buttonTypes = ['day', 'week', 'month', 'year'];
+  await powerStationStore.startFetching();
+  // 双重保障：无论watch是否触发都确保执行
+  if (powerStationDetail.value && !activeButton.value) {
+    handleButtonClick('day');
+  }
+  const buttonTypes = ['day', 'month', 'year'];
   let index = 0;
   timer = setInterval(() => {
     if (index >= buttonTypes.length) {
@@ -224,9 +265,10 @@ onMounted(async () => {
     }
     handleButtonClick(buttonTypes[index]);
     index++;
-  }, 3000);
+  }, 5000);
 });
 onUnmounted(() => {
+  powerStationStore.stopFetching();
   if (timer) {
     clearInterval(timer);
   }

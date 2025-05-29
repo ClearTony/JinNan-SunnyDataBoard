@@ -3,7 +3,7 @@
       <div>
         <!-- 二级标题 -->
         <dv-border-box-11
-          title="⚡️ 停电检测"
+          title="⚡️ 电量统计"
           style="width: 900px; height: 1200px"
         >
           <div>
@@ -21,7 +21,7 @@
                     color: #33ffff;
                   "
                 >
-                  ❃电量概况❃
+                  ⚡️ 电量概况
                 </div>
               </dv-border-box-5>
             </div>
@@ -63,7 +63,7 @@
                     color: #33ffff;
                   "
                 >
-                  ❃电站减排❃
+                  ⚡️ 电站减排
                 </div>
               </dv-border-box-5>
             </div>

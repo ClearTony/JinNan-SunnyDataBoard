@@ -2,7 +2,7 @@
   <!-- 第一个 停电检测 -->
   <div>
     <!-- 二级标题 -->
-    <dv-border-box-11 title="⚡️ 停电检测" style="width: 1900px; height: 1200px">
+    <dv-border-box-11 title="⚡️ 电量监测" style="width: 1900px; height: 1200px">
       <div>
         <!-- 三级标题 -->
         <div>
@@ -19,7 +19,7 @@
                 color: #33ffff;
               "
             >
-              ❃日发电量❃
+              ⚡️ 日发电量
             </div>
           </dv-border-box-5>
         </div>
@@ -65,7 +65,7 @@
                     color: #33ffff;
                   "
                 >
-                  ❃周月年发电量❃
+                  ⚡️ 周月年发电量
                   <!-- 添加按钮 -->
                   <div class="time-buttons" style="display: flex; gap: 10px; margin-left: 550px; margin-top: -30px;">
                     <button

@@ -19,7 +19,7 @@
                 color: #33ffff;
               "
             >
-              ⚡️ 日发电量
+              ⚡️ 今日电量
             </div>
           </dv-border-box-5>
         </div>
@@ -65,7 +65,7 @@
                     color: #33ffff;
                   "
                 >
-                  ⚡️ 周月年发电量
+                  ⚡️ 历史电量
                   <!-- 添加按钮 -->
                   <div class="time-buttons" style="display: flex; gap: 10px; margin-left: 550px; margin-top: -30px;">
                     <button

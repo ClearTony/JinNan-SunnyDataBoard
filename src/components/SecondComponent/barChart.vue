@@ -30,8 +30,8 @@ const monthXAxis = ref<string[]>([])
 const monthYAxis = ref<number[]>([])
 const yearXAxis = ref<string[]>([])
 const yearYAxis = ref<number[]>([])
-const typeName = ref<string>()
-const unitName = ref<string>()
+const typeName = ref<string>("周发电量")
+const unitName = ref<string>("度")
 const currentXAxis = ref<string[]>([]);
 const currentYAxis = ref<number[]>([]);
 // 监听数据变化自动更新图表
@@ -223,7 +223,7 @@ async function initMap() {
   };
   try {
     // ...原有 option 配置...
-    myChart.setOption(option);
+    myChart.setOption(option,true);
   } finally {
     myChart.hideLoading();
   }

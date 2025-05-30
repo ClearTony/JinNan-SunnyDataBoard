@@ -36,7 +36,6 @@ const currentXAxis = ref<string[]>([]);
 const currentYAxis = ref<number[]>([]);
 // 监听数据变化自动更新图表
 watch(() => activeButton.value, (newVal) => {
-  if (loading.value) return;
   switch(newVal) {
     case 'week':
       currentXAxis.value = weekXAxis.value;
@@ -59,8 +58,10 @@ watch(() => activeButton.value, (newVal) => {
   }
   initMap();
 });
-async function fetchData() {
-  loading.value = true; // 开始加载
+async function fetchData(isInitial = false) {
+  if (isInitial) {
+    loading.value = true;
+  }
   try {
     const res = await axios.post('/data/getBarChart', {
       queryDate: "20250529"
@@ -231,7 +232,7 @@ async function initMap() {
 
 let intervalId: ReturnType<typeof setInterval>;
 onMounted(async () => {
-  await fetchData();
+  await fetchData(true); // 初始化时调用，显示加载状态
   initMap();
   // 每 5 分钟（300000 毫秒）调用一次 fetchData 方法
   intervalId = setInterval(fetchData, 300000);

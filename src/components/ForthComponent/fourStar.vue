@@ -3,6 +3,7 @@
 
   <div class="boxall">
     <table>
+      <tbody>
       <tr>
         <td class="label-name">健康分值：</td>
         <td class="label-value">
@@ -63,6 +64,7 @@
           <div class="score-val">3分</div>
         </td>
       </tr>
+      </tbody>
     </table>
   </div>
 </template>
@@ -98,7 +100,7 @@ img {
   float: left;
   width: 21px;
   height: 20px;
-  margin-top: px;
+  margin-top: 0px;
 }
 .label-value .score-val {
   float: left;
@@ -110,3 +112,5 @@ img {
 </style>
 
 
+<script setup lang="ts">
+</script>

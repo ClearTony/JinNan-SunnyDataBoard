@@ -95,10 +95,4 @@ import {onMounted, computed,onUnmounted, ref} from "vue";
 
 const powerStationStore = usePowerStationStore();
 const powerStationDetail = computed(() => powerStationStore.powerStationDetail);
-onMounted(async () => {
-  await powerStationStore.startFetching();
-});
-onUnmounted(() => {
-  powerStationStore.stopFetching();
-});
 </script>

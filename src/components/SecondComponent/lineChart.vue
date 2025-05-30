@@ -1,8 +1,12 @@
 <template>
   <!-- 外层容器，用于统一管理布局 -->
   <div class="chart-container">
+    <!-- 加载状态 -->
+    <div class="loading-wrapper" v-if="loading">
+      <dv-loading>Loading...</dv-loading>
+    </div>
     <!-- 折线图容器 -->
-    <div class="chart-wrapper">
+    <div class="chart-wrapper"  v-else>
       <div ref="chartsDOM" style="width: 100%; height: 450px;"></div>
     </div>
   </div>
@@ -16,15 +20,19 @@ import { ref, onMounted, watch,onUnmounted } from "vue";
 import * as echarts from "echarts";
 import axios from 'axios'
 
+// 添加 loading 状态变量
+const loading = ref(true);
 const chartsDOM = ref();
 const yaxisYesterDayDatas = ref<number[]>([])
 const xaxisYesterDayDatas = ref<string[]>([])
 const yaxisNowDatas = ref<number[]>([])
 // 监听数据变化自动更新图表
 watch([xaxisYesterDayDatas, yaxisYesterDayDatas, yaxisNowDatas], () => {
+  if (loading.value) return;
   initMap();
-}, { deep: true });
+}, { flush: 'post' });
 async function fetchData() {
+  loading.value = true;
   try {
     const res = await axios.post('/data/getDayLineChart', {
       queryDate: "20250529"
@@ -34,16 +42,16 @@ async function fetchData() {
     yaxisNowDatas.value =  res.data.data.yaxisNowDatas;
   } catch (error) {
     console.error("请求失败:", error);
+  }finally {
+    loading.value = false; // 结束加载
   }
 }
 async function initMap() {
+  if (loading.value) return;
   const myChart = echarts.getInstanceByDom(chartsDOM.value) ||
       echarts.init(chartsDOM.value);
   myChart.clear(); // 清除旧的图表配置
-  // 显示 loading 动画
-  myChart.showLoading();
-  // 再得到数据的基础上，进行地图绘制
-  myChart.hideLoading();
+  myChart.showLoading(); // Echarts 内置加载动画
   var option = {
     color: ["#80FFA5","#00DDFF"],
     title: {
@@ -189,13 +197,18 @@ async function initMap() {
       },
     ],
   };
-
-  myChart.setOption(option);
+  try {
+    // ...原有 option 配置...
+    myChart.setOption(option);
+  } finally {
+    myChart.hideLoading();
+  }
 }
 
 let intervalId: ReturnType<typeof setInterval>;
 onMounted(async () => {
   await fetchData();
+  initMap();
   // 每 5 分钟（300000 毫秒）调用一次 fetchData 方法
   intervalId = setInterval(fetchData, 500000);
 });
@@ -213,6 +226,17 @@ onUnmounted(() => {
   align-items: center;
   padding: 0;
   gap: 10px; // 模块之间间距
+}
+.loading-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.6); // 可选：添加背景遮罩
+  padding: 20px;
+  border-radius: 8px;
+  color: #fff;
 }
 .chart-wrapper {
   width: 100%;

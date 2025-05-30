@@ -252,7 +252,7 @@ watch(
     }
 );
 onMounted(async () => {
-  await powerStationStore.startFetching();
+  // await powerStationStore.startFetching();
   // 双重保障：无论watch是否触发都确保执行
   if (powerStationDetail.value && !activeButton.value) {
     handleButtonClick('day');
@@ -267,10 +267,10 @@ onMounted(async () => {
     index++;
   }, 5000);
 });
-onUnmounted(() => {
-  powerStationStore.stopFetching();
-  if (timer) {
-    clearInterval(timer);
-  }
-});
+// onUnmounted(() => {
+//   powerStationStore.stopFetching();
+//   if (timer) {
+//     clearInterval(timer);
+//   }
+// });
 </script>

@@ -7,7 +7,7 @@
       <div class="flex justify-center">
         <dv-decoration-8 class="dv-dec-8" />
         <div class="title">
-          <span class="title-text">广州金南磁性材料电量监测站</span>
+          <span class="title-text">磁条事业部产线</span>
           <dv-decoration-6 class="dv-dec-6" :reverse="true" :color="['#50e3c2', '#67a1e5']" />
         </div>
         <dv-decoration-8 class="dv-dec-8" :reverse="true" />

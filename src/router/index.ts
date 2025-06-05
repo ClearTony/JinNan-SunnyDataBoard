@@ -3,8 +3,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/', // 设置根路径
-        name: 'homeView',
-        component: () => import('/@/views/homeView.vue'),
+        name: 'citiaoTask',
+        component: () => import('/@/views/citiaoTask.vue'),
         meta: {requiresAuth: true}
     },
     {

@@ -48,7 +48,7 @@ const viteConfig = defineConfig(({ mode, command }: ConfigEnv) => {
                     // rewrite: (path) => path.replace(/^\/api/, '')
                 },
                 '/citiao': {
-                    target: 'http://localhost:8090',
+                    target: 'http://localhost:8080',
                     changeOrigin: true
                     // rewrite: (path) => path.replace(/^\/api/, '')
                 }

@@ -17,182 +17,205 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps} from 'vue';
-
-const props = defineProps({
-  tableData: {
-    type: Array as () => Array<{ content: string; width?: string }>[],
-    required: true,
-    default: () => [
-      [{content: '成品生产规格控制表', width: '100%', className: 'bold-cell'}],
-      [
-        {content: '客户:', width: '13%', className: 'bold-cell'},
-        {content: 'YWY', width: '13%', className: 'bold-cell'},
-        {content: '料型：', width: '14%', className: 'bold-cell'},
-        {content: 'Y3M', width: '15%', className: 'bold-cell'},
-        {content: '端差', width: '14%', className: 'bold-cell'},
-        {content: '≤0.08', width: '15%', className: 'bold-cell'},
-        {content: '曲绕', width: '8%', className: 'bold-cell'},
-        {content: 'Φ35', width: '8%', className: 'bold-cell'}
-      ],
-      [
-        {content: '规格:', width: '13%', className: 'bold-cell'},
-        {content: '117.2', width: '13%', className: 'bold-cell'},
-        {content: '+0.20', width: '7%', className: 'bold-cell',  style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.20', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
-        {content: '×', width: '3%', className: 'bold-cell'},
-        {content: '17.0', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.15', width: '7%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.15', width: '7%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '×', className: 'bold-cell', width: '3%'},
-        {content: '4.2', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.08', width: '8%', className: 'bold-cell',style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.08', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
-      ],
-      [
-        {content: '调刀T:', width: '13%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
-        {content: '117.1－117.14', width: '30%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
-        {content: '17.03－17.09', width: '26%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
-        {content: '型号', width: '8%', className: 'bold-cell'},
-        {content: '11721742', width: '23%', className: 'bold-cell'},
-      ],
-      [
-        {content: '公差P', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '171.2', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.00', width: '7%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.13', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
-        {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '17.0', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.15', width: '7%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.03', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
-        {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '4.2', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.03', width: '8%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.06', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
-      ],
-      [
-        {content: '公差Q', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '117.2', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.00', width: '7%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.15', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
-        {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '17.0', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.15', width: '7%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.05', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
-        {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '4.2', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-        {content: '+0.04', width: '8%', className: 'bold-cell', style: {
-            backgroundColor: '#FFF3CA',
-            fontSize: '24px',
-            textAlign: 'left',
-            verticalAlign: 'top',
-            lineHeight: 'normal'
-          }},
-        {content: '-0.06', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
-      ],
-      [
-        {content: '条/箱', width: '13%', className: 'bold-cell'},
-        {content: '条/盒', width: '13%', className: 'bold-cell'},
-        {content: '条/排', width: '14%', className: 'bold-cell'},
-        {content: '条/打', width: '15%', className: 'bold-cell'},
-        {content: '包装箱', width: '14%', className: 'bold-cell'},
-        {content: '编号', width: '15%', className: 'bold-cell'},
-        {content: '网纹', width: '16%', className: 'bold-cell'},
-      ],
-      [
-        {content: '800', width: '13%', className: 'bold-cell'},
-        {content: '800', width: '13%', className: 'bold-cell'},
-        {content: '80', width: '14%', className: 'bold-cell'},
-        {content: '20', width: '15%', className: 'bold-cell'},
-        {content: '201箱', width: '14%', className: 'bold-cell'},
-        {content: '0', width: '15%', className: 'bold-cell'},
-        {content: '0', width: '16%', className: 'bold-cell'},
-      ],
-      [
-        {content: '包装方法：', width: '13%', className: 'bold-cell'},
-        {content: '不用内盒，2列5层，每层隔中薄膜，不用隔条。', width: '87%', className: 'bold-cell'},
-      ],
-      [
-        {content: '特殊要求：', width: '13%', className: 'bold-cell'},
-        {content: '0', width: '71%', className: 'bold-cell'},
-        {content: '图纸版本号', width: '16%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-      ],
-      [
-        {content: '包装备注：', width: '13%', className: 'bold-cell'},
-        {content: '纸箱侧面，合格贴左上角，规格标签贴右上角，HF贴合格下面', width: '71%', className: 'bold-cell'},
-        {content: '0', width: '16%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-      ],
-      [
-        {content: '叠片客户：', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '叠片规格', width: '18%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '叠片日期', width: '10%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '叠片数量', width: '10%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '放置区域', width: '14%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '要 求', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '计划数量（条）', width: '11%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-        {content: '实交数量（条）', width: '11%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
-      ],
-      [
-        {content: 'YR', width: '13%', className: 'bold-cell'},
-        {content: '174.0*17.0*4.50', width: '18%', className: 'bold-cell'},
-        {content: '240925', width: '10%', className: 'bold-cell'},
-        {content: '2D', width: '10%', className: 'bold-cell'},
-        {content: 'A8/B13', width: '14%', className: 'bold-cell'},
-        {content: '0', width: '13%', className: 'bold-cell'},
-        {content: '(11776)', width: '11%', className: 'bold-cell'},
-        {content: '13000', width: '11%', className: 'bold-cell'},
-      ],
-    ]
+import {defineProps, onMounted, onUnmounted,ref} from 'vue';
+import axios from 'axios'
+let intervalId: number | null = null
+const tableData = ref<Array<Array<{ content: string; width?: string; className?: string; customClass?: string; style?: any }>>>([])
+const fetchData = async (machineNumber: string) => {
+  try {
+    const response = await axios.get(`/citiao/getTaskPictureList/${machineNumber}`)
+    if (response.data.code === 100 && response.data.data.length > 0) {
+      const item = response.data.data[0]
+      updateTableData(item)
+    }
+  } catch (error) {
+    console.error('调用接口失败:', error)
   }
-});
+}
+onMounted(() => {
+  const machineNumber = '1' // 替换为实际的 machineNumber
+  fetchData(machineNumber) // 页面加载时立即调用一次
+  intervalId = window.setInterval(() => {
+    fetchData(machineNumber)
+  }, 5 * 60 * 1000) // 每 5 分钟调用一次
+})
+
+onUnmounted(() => {
+  if (intervalId !== null) {
+    window.clearInterval(intervalId) // 组件卸载时清除定时器
+  }
+})
+const updateTableData = (item: any) => {
+  const internalControlVo = item.internalControlVo || {}
+  tableData.value = [
+    [{content: '成品生产规格控制表', width: '100%', className: 'bold-cell'}],
+    [
+      {content: '客户:', width: '13%', className: 'bold-cell'},
+      {content:  item.customerName || '', width: '13%', className: 'bold-cell'},
+      {content: '料型：', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.materialType || '', width: '15%', className: 'bold-cell'},
+      {content: '端差', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.endDifference || '', width: '15%', className: 'bold-cell'},
+      {content: '曲绕', width: '8%', className: 'bold-cell'},
+      {content: internalControlVo.winding || '', width: '8%', className: 'bold-cell'}
+    ],
+    [
+      {content: '规格:', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.length || '', width: '13%', className: 'bold-cell'},
+      {content: '+'+internalControlVo.orderDrawingLimit1 || '', width: '7%', className: 'bold-cell',  style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.orderDrawingLimit1 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {content: '×', width: '3%', className: 'bold-cell'},
+      {content: internalControlVo.width || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.orderDrawingLimit2 || '', width: '7%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.orderDrawingLimit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {content: '×', className: 'bold-cell', width: '3%'},
+      {content: internalControlVo.thickness || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.orderDrawingLimit3 || '', width: '8%', className: 'bold-cell',style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.orderDrawingLimit3 || '', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
+    ],
+    [
+      {content: '调刀T:', width: '13%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
+      {content: (internalControlVo.cuta1 || '') +'—'+ (internalControlVo.cuta2 || ''), width: '30%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
+      {content: (internalControlVo.cutb1 || '') +'—'+( +internalControlVo.cutb2 || ''), width: '26%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
+      {content: '型号', width: '8%', className: 'bold-cell'},
+      {content: internalControlVo.model, width: '23%', className: 'bold-cell'},
+    ],
+    [
+      {content: '公差P', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: internalControlVo.finished1Max1 || '', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.finished1Limit1 || '', width: '7%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.finished1Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: internalControlVo.finished2Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.finished2Limit1 || '', width: '7%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.finished2Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: internalControlVo.finished3Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.finished3Limit1 || '', width: '8%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.finished3Limit2 || '', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
+    ],
+    [
+      {content: '公差Q', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: internalControlVo.qfinished1Max1 || '', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.qfinished1Limit1 || '', width: '7%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.qfinished1Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: internalControlVo.qfinished2Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.qfinished2Limit1 || '', width: '7%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.qfinished2Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: internalControlVo.qfinished3Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '+'+internalControlVo.qfinished3Limit1 || '', width: '8%', className: 'bold-cell', style: {
+          backgroundColor: '#FFF3CA',
+          fontSize: '24px',
+          textAlign: 'left',
+          verticalAlign: 'top',
+          lineHeight: 'normal'
+        }},
+      {content: '-'+internalControlVo.qfinished3Limit2 || '', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
+    ],
+    [
+      {content: '条/箱', width: '13%', className: 'bold-cell'},
+      {content: '条/盒', width: '13%', className: 'bold-cell'},
+      {content: '条/排', width: '14%', className: 'bold-cell'},
+      {content: '条/打', width: '15%', className: 'bold-cell'},
+      {content: '包装箱', width: '14%', className: 'bold-cell'},
+      {content: '编号', width: '15%', className: 'bold-cell'},
+      {content: '网纹', width: '16%', className: 'bold-cell'},
+    ],
+    [
+      {content: internalControlVo.piecesPerBox || '', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.piecesPerCartridge || '', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.piecesPerRow || '', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.piecesPerDozen || '', width: '15%', className: 'bold-cell'},
+      {content: internalControlVo.packagingBox || '', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.specificationCode || '', width: '15%', className: 'bold-cell'},
+      {content: internalControlVo.texture || '', width: '16%', className: 'bold-cell'},
+    ],
+    [
+      {content: '包装方法：', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.packagingMethod || '', width: '87%', className: 'bold-cell'},
+    ],
+    [
+      {content: '特殊要求：', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.specialRequirement || '', width: '71%', className: 'bold-cell'},
+      {content: '图纸版本号', width: '16%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+    ],
+    [
+      {content: '包装备注：', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.packagingRemark || '', width: '71%', className: 'bold-cell'},
+      {content: internalControlVo.drawingVersionNumber || '', width: '16%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+    ],
+    [
+      {content: '叠片客户：', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '叠片规格', width: '18%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '叠片日期', width: '10%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '叠片数量', width: '10%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '放置区域', width: '14%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '要 求', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '计划数量（条）', width: '11%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+      {content: '实交数量（条）', width: '11%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
+    ],
+    [
+      {content: 'YR', width: '13%', className: 'bold-cell'},
+      {content: '174.0*17.0*4.50', width: '18%', className: 'bold-cell'},
+      {content: '240925', width: '10%', className: 'bold-cell'},
+      {content: '2D', width: '10%', className: 'bold-cell'},
+      {content: 'A8/B13', width: '14%', className: 'bold-cell'},
+      {content: '0', width: '13%', className: 'bold-cell'},
+      {content: '(11776)', width: '11%', className: 'bold-cell'},
+      {content: '13000', width: '11%', className: 'bold-cell'},
+    ],
+  ]
+}
 </script>
 
 

@@ -23,13 +23,21 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, onMounted, onUnmounted,ref} from 'vue';
+import {defineProps, onMounted, onUnmounted, ref} from 'vue';
 import axios from 'axios'
-import { useRoute } from 'vue-router'
+import {useRoute} from 'vue-router'
+
 const route = useRoute()
 let intervalId: number | null = null
-const tableData = ref<Array<Array<{ content: string; width?: string; className?: string; customClass?: string; style?: any }>>>([])
+const tableData = ref<Array<Array<{
+  content: string;
+  width?: string;
+  className?: string;
+  customClass?: string;
+  style?: any
+}>>>([])
 const res = ref<any>(null)
+const refStatus = ref<any>(null)
 
 const currentPage = ref(0) // 当前页码，从 0 开始计数
 const totalPage = ref(0)   // 总页数
@@ -47,12 +55,25 @@ const fetchData = async (machineNumber: string) => {
     console.error('调用接口失败:', error)
   }
 }
+const fetchDataStatus = async (machineNumber: string) => {
+  try {
+    const axiosResponse = await axios.get(`/citiao/getNewDataStatus/${machineNumber}`)
+    if (axiosResponse.data.code === 100) {
+      refStatus.value = axiosResponse.data.data.status
+    }
+  } catch (error) {
+    console.error('调用接口失败:', error)
+  }
+}
 onMounted(() => {
   const machineNumber = route.params.machineNumber as string // 从 URL 获取
   fetchData(machineNumber) // 页面加载时立即调用一次
   intervalId = window.setInterval(() => {
-    fetchData(machineNumber)
-  }, 5 * 60 * 1000) // 每 5 分钟调用一次
+    fetchDataStatus(machineNumber)
+    if (refStatus.value === "1") {
+      fetchData(machineNumber)
+    }
+  }, 60 * 1000) // 每 5 分钟调用一次
 })
 
 onUnmounted(() => {
@@ -66,7 +87,7 @@ const updateTableData = (item: any) => {
     [{content: '成品生产规格控制表', width: '100%', className: 'bold-cell'}],
     [
       {content: '客户:', width: '13%', className: 'bold-cell'},
-      {content:  internalControlVo.symbol || '', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.symbol || '', width: '13%', className: 'bold-cell'},
       {content: '料型：', width: '14%', className: 'bold-cell'},
       {content: internalControlVo.materialType || '', width: '15%', className: 'bold-cell'},
       {content: '端差', width: '14%', className: 'bold-cell'},
@@ -77,54 +98,191 @@ const updateTableData = (item: any) => {
     [
       {content: '规格:', width: '13%', className: 'bold-cell'},
       {content: internalControlVo.length || '', width: '13%', className: 'bold-cell'},
-      {content: '+'+internalControlVo.orderDrawingLimit1 || '', width: '7%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.orderDrawingLimit1 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {
+        content: '+' + internalControlVo.orderDrawingLimit1 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: '-' + internalControlVo.orderDrawingLimit1 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      },
       {content: '×', width: '3%', className: 'bold-cell'},
-      {content: internalControlVo.width || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.orderDrawingLimit2 || '', width: '7%', className: 'bold-cell', style: {
+      {
+        content: internalControlVo.width || '',
+        width: '12%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: '+' + internalControlVo.orderDrawingLimit2 || '', width: '7%', className: 'bold-cell', style: {
           backgroundColor: '#FFF3CA',
           fontSize: '24px',
-        }, customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.orderDrawingLimit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+        }, customClass: 'align-top-left'
+      },
+      {
+        content: '-' + internalControlVo.orderDrawingLimit2 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      },
       {content: '×', className: 'bold-cell', width: '3%'},
-      {content: internalControlVo.thickness || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.orderDrawingLimit3 || '', width: '8%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.orderDrawingLimit3 || '', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
+      {
+        content: internalControlVo.thickness || '',
+        width: '12%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: '+' + internalControlVo.orderDrawingLimit3 || '',
+        width: '8%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: '-' + internalControlVo.orderDrawingLimit3 || '',
+        width: '8%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      }
     ],
     [
       {content: '调刀T:', width: '13%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
-      {content: (internalControlVo.cuta1 || '') +'—'+ (internalControlVo.cuta2 || ''), width: '30%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
-      {content: (internalControlVo.cutb1 || '') +'—'+( +internalControlVo.cutb2 || ''), width: '26%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
+      {
+        content: (internalControlVo.cuta1 || '') + '—' + (internalControlVo.cuta2 || ''),
+        width: '30%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#F4B7BE'}
+      },
+      {
+        content: (internalControlVo.cutb1 || '') + '—' + (+internalControlVo.cutb2 || ''),
+        width: '26%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#F4B7BE'}
+      },
       {content: '型号', width: '8%', className: 'bold-cell'},
       {content: internalControlVo.model, width: '23%', className: 'bold-cell'},
     ],
     [
       {content: '公差P', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: internalControlVo.finished1Max1 || '', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.finished1Limit1 || '', width: '7%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.finished1Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {
+        content: internalControlVo.finished1Max1 || '',
+        width: '13%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: internalControlVo.finished1Limit1 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: internalControlVo.finished1Limit2 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      },
       {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: internalControlVo.finished2Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.finished2Limit1 || '', width: '7%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.finished2Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {
+        content: internalControlVo.finished2Max1 || '',
+        width: '12%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: internalControlVo.finished2Limit1 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: internalControlVo.finished2Limit2 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      },
       {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: internalControlVo.finished3Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.finished3Limit1 || '', width: '8%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.finished3Limit2 || '', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
+      {
+        content: internalControlVo.finished3Max1 || '',
+        width: '12%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: internalControlVo.finished3Limit1 || '',
+        width: '8%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: internalControlVo.finished3Limit2 || '',
+        width: '8%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      }
     ],
     [
       {content: '公差Q', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: internalControlVo.qfinished1Max1 || '', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.qfinished1Limit1 || '', width: '7%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.qfinished1Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {
+        content: internalControlVo.qfinished1Max1 || '',
+        width: '13%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: internalControlVo.qfinished1Limit1 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: internalControlVo.qfinished1Limit2 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      },
       {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: internalControlVo.qfinished2Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.qfinished2Limit1 || '', width: '7%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.qfinished2Limit2 || '', width: '7%', className: 'bold-cell', customClass: 'special-cell'},
+      {
+        content: internalControlVo.qfinished2Max1 || '',
+        width: '12%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: internalControlVo.qfinished2Limit1 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: internalControlVo.qfinished2Limit2 || '',
+        width: '7%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      },
       {content: '×', width: '3%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: internalControlVo.qfinished3Max1 || '', width: '12%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
-      {content: '+'+internalControlVo.qfinished3Limit1 || '', width: '8%', className: 'bold-cell', customClass: 'align-top-left'},
-      {content: '-'+internalControlVo.qfinished3Limit2 || '', width: '8%', className: 'bold-cell', customClass: 'special-cell'}
+      {
+        content: internalControlVo.qfinished3Max1 || '',
+        width: '12%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FFF3CA'}
+      },
+      {
+        content: internalControlVo.qfinished3Limit1 || '',
+        width: '8%',
+        className: 'bold-cell',
+        customClass: 'align-top-left'
+      },
+      {
+        content: internalControlVo.qfinished3Limit2 || '',
+        width: '8%',
+        className: 'bold-cell',
+        customClass: 'special-cell'
+      }
     ],
     [
       {content: '条/箱', width: '13%', className: 'bold-cell'},
@@ -145,28 +303,68 @@ const updateTableData = (item: any) => {
       {content: internalControlVo.texture || '', width: '16%', className: 'bold-cell'},
     ],
     [
-      {content: '包装方法：', width: '13%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: internalControlVo.packagingMethod || '', width: '87%', className: 'bold-cell',style: {fontSize: '24px'}},
+      {content: '包装方法：', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {
+        content: internalControlVo.packagingMethod || '',
+        width: '87%',
+        className: 'bold-cell',
+        style: {fontSize: '24px'}
+      },
     ],
     [
-      {content: '特殊要求：', width: '13%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: internalControlVo.specialRequirement || '', width: '61%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: '图纸版本号', width: '7%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'}},
-      {content: internalControlVo.drawingVersionNumber || '', width: '19%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'}},
+      {content: '特殊要求：', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {
+        content: internalControlVo.specialRequirement || '',
+        width: '61%',
+        className: 'bold-cell',
+        style: {fontSize: '24px'}
+      },
+      {
+        content: '图纸版本号',
+        width: '7%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+      },
+      {
+        content: internalControlVo.drawingVersionNumber || '',
+        width: '19%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+      },
     ],
     [
-      {content: '计划数量（条）', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'}},
-      {content: '实交数量（条）', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'}},
-      {content: '要 求：', width: '22%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'}},
-      {content: '备注', width: '26%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'}},
-      {content: '包装备注', width: '26%', className: 'bold-cell', style: {backgroundColor: '#FEDB61',fontSize: '24px'} },
+      {
+        content: '计划数量（条）',
+        width: '13%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+      },
+      {
+        content: '实交数量（条）',
+        width: '13%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+      },
+      {content: '要 求：', width: '22%', className: 'bold-cell', style: {backgroundColor: '#FEDB61', fontSize: '24px'}},
+      {content: '备注', width: '26%', className: 'bold-cell', style: {backgroundColor: '#FEDB61', fontSize: '24px'}},
+      {
+        content: '包装备注',
+        width: '26%',
+        className: 'bold-cell',
+        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+      },
     ],
     [
-      {content: item.plannedQuantity || '', width: '13%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: item.actualQuantity || '', width: '13%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: item.requirement || '', width: '22%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: item.remark || '', width: '26%', className: 'bold-cell',style: {fontSize: '24px'}},
-      {content: internalControlVo.packagingRemark || '', width: '26%', className: 'bold-cell',style: {fontSize: '24px'}},
+      {content: item.plannedQuantity || '', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {content: item.actualQuantity || '', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {content: item.requirement || '', width: '22%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {content: item.remark || '', width: '26%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {
+        content: internalControlVo.packagingRemark || '',
+        width: '26%',
+        className: 'bold-cell',
+        style: {fontSize: '24px'}
+      },
     ],
     // [
     //   {content: '叠片客户：', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FEDB61'}},
@@ -206,6 +404,7 @@ const changePage = (direction: number) => {
 .table-wrapper {
   margin-top: 3%;
 }
+
 .custom-table {
   min-width: max-content;
   width: 90%;
@@ -265,19 +464,22 @@ const changePage = (direction: number) => {
 .table-cell:last-child {
   border-right: none;
 }
+
 /* 加粗文字 */
 .bold-cell {
   font-weight: bold;
 }
+
 .special-cell {
   background-color: #FFF3CA;
   font-size: 24px;
   display: flex;
-  align-items: flex-end;     /* 垂直顶部对齐 */
-  justify-content: flex-end;   /* 水平右侧对齐 */
-  padding:3px;
+  align-items: flex-end; /* 垂直顶部对齐 */
+  justify-content: flex-end; /* 水平右侧对齐 */
+  padding: 3px;
 
 }
+
 .pagination {
   margin-top: 20px;
   text-align: center;
@@ -295,6 +497,7 @@ const changePage = (direction: number) => {
   color: #999;
   cursor: not-allowed;
 }
+
 .align-top-left {
   display: flex;
   align-items: flex-start;

@@ -1,6 +1,18 @@
 <template>
   <div class="table-wrapper">
-    <div class="custom-table">
+
+    <div style="margin-bottom: 20px; margin-left: 5%;">
+      <el-date-picker
+          v-model="selectedDate"
+          type="date"
+          placeholder="选择排产日期"
+          value-format="YYYY-MM-DD"
+          :clearable="false"
+          @change="onDateChange"
+      />
+    </div>
+
+    <div class="custom-table"  v-if="tableData.length > 0">
       <div v-for="(row, rowIndex) in tableData" :key="rowIndex" class="table-row">
         <div
             v-for="(cell, cellIndex) in row"
@@ -14,6 +26,11 @@
       </div>
     </div>
 
+    <div v-else class="empty-data" style="margin-left: 5%; font-size: 24px; color: #999;">
+      暂无数据，请选择其他日期或稍后再试
+    </div>
+
+
     <div class="pagination">
       <button @click="changePage(-1)" :disabled="currentPage === 0">上一页</button>
       <span>当前第 {{ currentPage + 1 }} / 共 {{ totalPage }} 页</span>
@@ -26,6 +43,8 @@
 import {defineProps, onMounted, onUnmounted, ref} from 'vue';
 import axios from 'axios'
 import {useRoute} from 'vue-router'
+import { format } from 'date-fns'
+const selectedDate = ref<string>('')
 
 const route = useRoute()
 let intervalId: number | null = null
@@ -41,18 +60,36 @@ const refStatus = ref<any>(null)
 
 const currentPage = ref(0) // 当前页码，从 0 开始计数
 const totalPage = ref(0)   // 总页数
-const fetchData = async (machineNumber: string) => {
+const fetchData = async (machineNumber: string, taskDate: string) => {
   try {
-    const response = await axios.get(`/citiao/getTaskPictureList/${machineNumber}`)
-    if (response.data.code === 100 && response.data.data.length > 0) {
+    const response = await axios.get(`/citiao/getTaskPictureList/${machineNumber}`, {
+      params: {
+        taskDate // 把日期作为查询参数传入
+      }
+    })
+
+    if (response.data.code === 100 && Array.isArray(response.data.data) && response.data.data.length > 0) {
       res.value = response.data
       totalPage.value = response.data.data.length
       currentPage.value = 0
       const item = response.data.data[currentPage.value]
       updateTableData(item)
+    }else {
+      // 数据为空时清空表格内容，并提示
+      tableData.value = []
+      res.value = null
+      totalPage.value = 0
+      currentPage.value = 0
     }
   } catch (error) {
     console.error('调用接口失败:', error)
+  }
+}
+
+const onDateChange = () => {
+  const machineNumber = route.params.machineNumber as string
+  if (selectedDate.value) {
+    fetchData(machineNumber, selectedDate.value)
   }
 }
 const fetchDataStatus = async (machineNumber: string) => {
@@ -66,12 +103,13 @@ const fetchDataStatus = async (machineNumber: string) => {
   }
 }
 onMounted(() => {
-  const machineNumber = route.params.machineNumber as string // 从 URL 获取
-  fetchData(machineNumber) // 页面加载时立即调用一次
+  selectedDate.value = format(new Date(), 'yyyy-MM-dd')
+  const machineNumber = route.params.machineNumber as string
+  fetchData(machineNumber,selectedDate.value) // 页面加载时立即调用一次
   intervalId = window.setInterval(() => {
     fetchDataStatus(machineNumber)
     if (refStatus.value === "1") {
-      fetchData(machineNumber)
+      fetchData(machineNumber,selectedDate.value)
     }
   }, 60 * 1000) // 每 5 分钟调用一次
 })

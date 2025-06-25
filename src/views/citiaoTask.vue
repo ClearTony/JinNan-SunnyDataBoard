@@ -1,14 +1,14 @@
 <template>
   <div class="table-wrapper">
 
-    <div style="margin-bottom: 20px; margin-left: 5%;">
+    <div style="margin-bottom: 15px; margin-left: 9%;">
       <el-date-picker
           v-model="selectedDate"
           type="date"
           placeholder="选择排产日期"
           value-format="YYYY-MM-DD"
           :clearable="false"
-          @change="onDateChange"
+          @change="onDateChange" style="width: 160px; height: 36px; font-size: 18px;"
       />
     </div>
 
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div v-else class="empty-data" style="margin-left: 5%; font-size: 24px; color: #999;">
+    <div v-else class="empty-data" style="margin-left: 9%; font-size: 30px; color: #999;">
       暂无数据，请选择其他日期或稍后再试
     </div>
 
@@ -124,26 +124,26 @@ const updateTableData = (item: any) => {
   tableData.value = [
     [{content: '成品生产规格控制表', width: '100%', className: 'bold-cell'}],
     [
-      {content: '客户:', width: '13%', className: 'bold-cell'},
-      {content: internalControlVo.symbol || '', width: '13%', className: 'bold-cell'},
+      {content: '客户:', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.symbol || '', width: '14%', className: 'bold-cell'},
       {content: '料型：', width: '14%', className: 'bold-cell'},
       {content: internalControlVo.materialType || '', width: '15%', className: 'bold-cell'},
       {content: '端差', width: '14%', className: 'bold-cell'},
       {content: internalControlVo.endDifference || '', width: '15%', className: 'bold-cell'},
-      {content: '曲绕', width: '8%', className: 'bold-cell'},
-      {content: internalControlVo.winding || '', width: '8%', className: 'bold-cell'}
+      {content: '曲绕', width: '7%', className: 'bold-cell'},
+      {content: internalControlVo.winding || '', width: '7%', className: 'bold-cell'}
     ],
     [
-      {content: '规格:', width: '13%', className: 'bold-cell'},
-      {content: internalControlVo.length || '', width: '13%', className: 'bold-cell'},
+      {content: '规格:', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.length || '', width: '14%', className: 'bold-cell'},
       {
-        content: '+' + internalControlVo.orderDrawingLimit1 || '',
+        content: '+' + internalControlVo.orderDrawingLimit1_01 || '',
         width: '7%',
         className: 'bold-cell',
         customClass: 'align-top-left'
       },
       {
-        content: '-' + internalControlVo.orderDrawingLimit1 || '',
+        content: '-' + internalControlVo.orderDrawingLimit1_02 || '',
         width: '7%',
         className: 'bold-cell',
         customClass: 'special-cell'
@@ -156,13 +156,12 @@ const updateTableData = (item: any) => {
         style: {backgroundColor: '#FFF3CA'}
       },
       {
-        content: '+' + internalControlVo.orderDrawingLimit2 || '', width: '7%', className: 'bold-cell', style: {
+        content: '+' + internalControlVo.orderDrawingLimit2_01 || '', width: '7%', className: 'bold-cell', style: {
           backgroundColor: '#FFF3CA',
-          fontSize: '24px',
         }, customClass: 'align-top-left'
       },
       {
-        content: '-' + internalControlVo.orderDrawingLimit2 || '',
+        content: '-' + internalControlVo.orderDrawingLimit2_02 || '',
         width: '7%',
         className: 'bold-cell',
         customClass: 'special-cell'
@@ -175,23 +174,23 @@ const updateTableData = (item: any) => {
         style: {backgroundColor: '#FFF3CA'}
       },
       {
-        content: '+' + internalControlVo.orderDrawingLimit3 || '',
-        width: '8%',
+        content: '+' + internalControlVo.orderDrawingLimit3_01 || '',
+        width: '7%',
         className: 'bold-cell',
         customClass: 'align-top-left'
       },
       {
-        content: '-' + internalControlVo.orderDrawingLimit3 || '',
-        width: '8%',
+        content: '-' + internalControlVo.orderDrawingLimit3_02 || '',
+        width: '7%',
         className: 'bold-cell',
         customClass: 'special-cell'
       }
     ],
     [
-      {content: '调刀T:', width: '13%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
+      {content: '调刀T:', width: '14%', className: 'bold-cell', style: {backgroundColor: '#F4B7BE'}},
       {
         content: (internalControlVo.cuta1 || '') + '—' + (internalControlVo.cuta2 || ''),
-        width: '30%',
+        width: '31%',
         className: 'bold-cell',
         style: {backgroundColor: '#F4B7BE'}
       },
@@ -201,14 +200,14 @@ const updateTableData = (item: any) => {
         className: 'bold-cell',
         style: {backgroundColor: '#F4B7BE'}
       },
-      {content: '型号', width: '8%', className: 'bold-cell'},
-      {content: internalControlVo.model, width: '23%', className: 'bold-cell'},
+      {content: '型号', width: '7%', className: 'bold-cell'},
+      {content: internalControlVo.model, width: '22%', className: 'bold-cell'},
     ],
     [
-      {content: '公差P', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '公差P', width: '14%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
       {
         content: internalControlVo.finished1Max1 || '',
-        width: '13%',
+        width: '14%',
         className: 'bold-cell',
         style: {backgroundColor: '#FFF3CA'}
       },
@@ -252,22 +251,22 @@ const updateTableData = (item: any) => {
       },
       {
         content: internalControlVo.finished3Limit1 || '',
-        width: '8%',
+        width: '7%',
         className: 'bold-cell',
         customClass: 'align-top-left'
       },
       {
         content: internalControlVo.finished3Limit2 || '',
-        width: '8%',
+        width: '7%',
         className: 'bold-cell',
         customClass: 'special-cell'
       }
     ],
     [
-      {content: '公差Q', width: '13%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
+      {content: '公差Q', width: '14%', className: 'bold-cell', style: {backgroundColor: '#FFF3CA'}},
       {
         content: internalControlVo.qfinished1Max1 || '',
-        width: '13%',
+        width: '14%',
         className: 'bold-cell',
         style: {backgroundColor: '#FFF3CA'}
       },
@@ -311,97 +310,94 @@ const updateTableData = (item: any) => {
       },
       {
         content: internalControlVo.qfinished3Limit1 || '',
-        width: '8%',
+        width: '7%',
         className: 'bold-cell',
         customClass: 'align-top-left'
       },
       {
         content: internalControlVo.qfinished3Limit2 || '',
-        width: '8%',
+        width: '7%',
         className: 'bold-cell',
         customClass: 'special-cell'
       }
     ],
     [
-      {content: '条/箱', width: '13%', className: 'bold-cell'},
-      {content: '条/盒', width: '13%', className: 'bold-cell'},
+      {content: '条/箱', width: '14%', className: 'bold-cell'},
+      {content: '条/盒', width: '14%', className: 'bold-cell'},
       {content: '条/排', width: '14%', className: 'bold-cell'},
       {content: '条/打', width: '15%', className: 'bold-cell'},
       {content: '包装箱', width: '14%', className: 'bold-cell'},
       {content: '编号', width: '15%', className: 'bold-cell'},
-      {content: '网纹', width: '16%', className: 'bold-cell'},
+      {content: '网纹', width: '14%', className: 'bold-cell'},
     ],
     [
-      {content: internalControlVo.piecesPerBox || '', width: '13%', className: 'bold-cell'},
-      {content: internalControlVo.piecesPerCartridge || '', width: '13%', className: 'bold-cell'},
+      {content: internalControlVo.piecesPerBox || '', width: '14%', className: 'bold-cell'},
+      {content: internalControlVo.piecesPerCartridge || '', width: '14%', className: 'bold-cell'},
       {content: internalControlVo.piecesPerRow || '', width: '14%', className: 'bold-cell'},
       {content: internalControlVo.piecesPerDozen || '', width: '15%', className: 'bold-cell'},
       {content: internalControlVo.packagingBox || '', width: '14%', className: 'bold-cell'},
       {content: internalControlVo.specificationCode || '', width: '15%', className: 'bold-cell'},
-      {content: internalControlVo.texture || '', width: '16%', className: 'bold-cell'},
+      {content: internalControlVo.texture || '', width: '14%', className: 'bold-cell'},
     ],
     [
-      {content: '包装方法：', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {content: '包装方法：', width: '14%', className: 'bold-cell-2'},
       {
         content: internalControlVo.packagingMethod || '',
-        width: '87%',
-        className: 'bold-cell',
-        style: {fontSize: '24px'}
+        width: '86%',
+        className: 'bold-cell-2'
       },
     ],
     [
-      {content: '特殊要求：', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {content: '特殊要求：', width: '14%', className: 'bold-cell-2'},
       {
         content: internalControlVo.specialRequirement || '',
-        width: '61%',
-        className: 'bold-cell',
-        style: {fontSize: '24px'}
+        width: '62%',
+        className: 'bold-cell-2'
       },
       {
         content: '图纸版本号',
-        width: '7%',
-        className: 'bold-cell',
-        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+        width: '8%',
+        className: 'bold-cell-2',
+        style: {backgroundColor: '#FEDB61'}
       },
       {
         content: internalControlVo.drawingVersionNumber || '',
-        width: '19%',
-        className: 'bold-cell',
-        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+        width: '16%',
+        className: 'bold-cell-2',
+        style: {backgroundColor: '#FEDB61'}
       },
     ],
     [
       {
         content: '计划数量（条）',
-        width: '13%',
-        className: 'bold-cell',
-        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+        width: '14%',
+        className: 'bold-cell-2',
+        style: {backgroundColor: '#FEDB61'}
       },
       {
         content: '实交数量（条）',
-        width: '13%',
-        className: 'bold-cell',
-        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+        width: '14%',
+        className: 'bold-cell-2',
+        style: {backgroundColor: '#FEDB61'}
       },
-      {content: '要 求：', width: '22%', className: 'bold-cell', style: {backgroundColor: '#FEDB61', fontSize: '24px'}},
-      {content: '备注', width: '26%', className: 'bold-cell', style: {backgroundColor: '#FEDB61', fontSize: '24px'}},
+      {content: '要 求：', width: '22%', className: 'bold-cell-2', style: {backgroundColor: '#FEDB61'}},
+      {content: '备注', width: '26%', className: 'bold-cell-2', style: {backgroundColor: '#FEDB61'}},
       {
         content: '包装备注',
-        width: '26%',
-        className: 'bold-cell',
-        style: {backgroundColor: '#FEDB61', fontSize: '24px'}
+        width: '24%',
+        className: 'bold-cell-2',
+        style: {backgroundColor: '#FEDB61'}
       },
     ],
     [
-      {content: item.plannedQuantity || '', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
-      {content: item.actualQuantity || '', width: '13%', className: 'bold-cell', style: {fontSize: '24px'}},
-      {content: item.requirement || '', width: '22%', className: 'bold-cell', style: {fontSize: '24px'}},
-      {content: item.remark || '', width: '26%', className: 'bold-cell', style: {fontSize: '24px'}},
+      {content: item.plannedQuantity || '', width: '14%', className: 'bold-cell-2'},
+      {content: item.actualQuantity || '', width: '14%', className: 'bold-cell-2'},
+      {content: item.requirement || '', width: '22%', className: 'bold-cell-2'},
+      {content: item.remark || '', width: '26%', className: 'bold-cell-2'},
       {
         content: internalControlVo.packagingRemark || '',
-        width: '26%',
-        className: 'bold-cell',
-        style: {fontSize: '24px'}
+        width: '24%',
+        className: 'bold-cell-2'
       },
     ],
     // [
@@ -444,41 +440,24 @@ const changePage = (direction: number) => {
 }
 
 .custom-table {
-  min-width: max-content;
-  width: 90%;
-  margin-left: 5%; /* 左侧留出 10% 空白 */
+  width: 80%;
+  margin-left: 9%; /* 左侧留出 10% 空白 */
   font-family: "Microsoft Yahei", sans-serif;
-  font-size: 35px;
+  font-size: 36px;
   color: #0c0000;
   background-color: #fff;
   position: relative;
-  border-top: 2px solid #000; /* 黑色顶部边框 */
-}
+  max-width: 80%;
+  border-top: 3px solid #000;
+  border-left: 3px solid #000;
+  border-right: 3px solid #000;
 
-/* 左右边框 */
-.custom-table::after,
-.custom-table::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: #000;
-  z-index: 1;
-}
-
-.custom-table::after {
-  left: 0;
-}
-
-.custom-table::before {
-  right: 0;
 }
 
 .table-row {
   display: flex;
   min-height: 90px;
-  border-bottom: 2px solid #000;
+  border-bottom: 3px solid #000;
   box-sizing: border-box;
 }
 
@@ -487,11 +466,10 @@ const changePage = (direction: number) => {
 }
 
 .table-cell {
-  border-right: 10px solid #000;
   box-sizing: border-box;
   text-align: center;
   flex-shrink: 0;
-  border-right: 2px solid #000;
+  border-right: 3px solid #000;
   white-space: pre-wrap;
   word-break: break-all;
   display: flex;
@@ -503,23 +481,26 @@ const changePage = (direction: number) => {
   border-right: none;
 }
 
-/* 加粗文字 */
 .bold-cell {
   font-weight: bold;
+  font-size: 36px;
+}
+
+.bold-cell-2 {
+  font-size: 28px;
 }
 
 .special-cell {
   background-color: #FFF3CA;
-  font-size: 24px;
+  font-size: 28px;
   display: flex;
   align-items: flex-end; /* 垂直顶部对齐 */
-  justify-content: flex-end; /* 水平右侧对齐 */
+  justify-content: flex-start; /* 水平右侧对齐 */
   padding: 3px;
-
 }
 
 .pagination {
-  margin-top: 20px;
+  margin-top: 15px;
   text-align: center;
   font-size: 18px;
 }
@@ -542,7 +523,7 @@ const changePage = (direction: number) => {
   justify-content: flex-start;
   text-align: left;
   background-color: #FFF3CA;
-  font-size: 24px;
+  font-size: 28px;
 }
 </style>
 

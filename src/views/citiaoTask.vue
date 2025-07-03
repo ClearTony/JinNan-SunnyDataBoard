@@ -3,15 +3,16 @@
 
     <div style="margin-bottom: 15px; margin-left: 9%;">
       <el-date-picker
-          v-model="selectedDate"
-          type="date"
-          placeholder="选择排产日期"
+          v-model="dateRange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="排产开始日期"
+          end-placeholder="排产结束日期"
           value-format="YYYY-MM-DD"
           :clearable="false"
-          @change="onDateChange" style="width: 160px; height: 36px; font-size: 18px;"
+          @change="onDateChange" style="width: 280px; height: 36px; font-size: 18px;"
       />
     </div>
-
     <div class="custom-table"  v-if="tableData.length > 0">
       <div v-for="(row, rowIndex) in tableData" :key="rowIndex" class="table-row">
         <div
@@ -43,9 +44,8 @@
 import {defineProps, onMounted, onUnmounted, ref} from 'vue';
 import axios from 'axios'
 import {useRoute} from 'vue-router'
-import { format } from 'date-fns'
-const selectedDate = ref<string>('')
-
+import { format , addDays } from 'date-fns'
+const dateRange = ref<string[]>([])
 const route = useRoute()
 let intervalId: number | null = null
 const tableData = ref<Array<Array<{
@@ -60,11 +60,12 @@ const refStatus = ref<any>(null)
 
 const currentPage = ref(0) // 当前页码，从 0 开始计数
 const totalPage = ref(0)   // 总页数
-const fetchData = async (machineNumber: string, taskDate: string) => {
+const fetchData = async (machineNumber: string, startDate: string, endDate: string) => {
   try {
     const response = await axios.get(`/citiao/getTaskPictureList/${machineNumber}`, {
       params: {
-        taskDate // 把日期作为查询参数传入
+        taskStartDate: startDate,
+        taskEndDate: endDate
       }
     })
 
@@ -88,8 +89,9 @@ const fetchData = async (machineNumber: string, taskDate: string) => {
 
 const onDateChange = () => {
   const machineNumber = route.params.machineNumber as string
-  if (selectedDate.value) {
-    fetchData(machineNumber, selectedDate.value)
+  if (dateRange.value && dateRange.value.length === 2) {
+    const [startDate, endDate] = dateRange.value
+    fetchData(machineNumber, startDate, endDate)
   }
 }
 const fetchDataStatus = async (machineNumber: string) => {
@@ -103,13 +105,15 @@ const fetchDataStatus = async (machineNumber: string) => {
   }
 }
 onMounted(() => {
-  selectedDate.value = format(new Date(), 'yyyy-MM-dd')
+  const startDate = format(new Date(), 'yyyy-MM-dd')
+  const endDate = format(addDays(new Date(), 1), 'yyyy-MM-dd')
+  dateRange.value = [startDate, endDate]
   const machineNumber = route.params.machineNumber as string
-  fetchData(machineNumber,selectedDate.value) // 页面加载时立即调用一次
+  fetchData(machineNumber,startDate,endDate) // 页面加载时立即调用一次
   intervalId = window.setInterval(() => {
     fetchDataStatus(machineNumber)
     if (refStatus.value === "1") {
-      fetchData(machineNumber,selectedDate.value)
+      fetchData(machineNumber,startDate,endDate)
     }
   }, 60 * 1000) // 每 5 分钟调用一次
 })
@@ -483,11 +487,11 @@ const changePage = (direction: number) => {
 
 .bold-cell {
   font-weight: bold;
-  font-size: 36px;
+  font-size: 46px;
 }
 
 .bold-cell-2 {
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .special-cell {

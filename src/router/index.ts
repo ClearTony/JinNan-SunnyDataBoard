@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/', // 设置根路径
-        name: 'homeView',
+        name: 'citiaoTask',
         component: () => import('/@/views/homeView.vue'),
         meta: {requiresAuth: true}
     },
@@ -18,6 +18,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'login',
         component: () => import('/@/components/LoginComponent/login.vue'),
         meta: {requiresAuth: false}
+    },
+    {
+        path: '/:machineNumber',
+        name: 'CitiaoTask',
+        component: () => import('../views/citiaoTask.vue')
     }
 ]
 
